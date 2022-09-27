@@ -1,0 +1,14 @@
+button {
+  background: none;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+
+  &:not([disabled]) {
+    cursor: pointer;
+
+    &:hover {
+      background-color: rgb(235, 235, 235);
+    }
+  }
+}

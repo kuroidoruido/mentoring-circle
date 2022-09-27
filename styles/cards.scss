@@ -1,0 +1,29 @@
+// $light-border-size: 1px;
+$border-color: rgb(200, 200, 200);
+
+@mixin light-border() {
+  box-shadow: 0 0 10px $border-color;
+}
+// $light-border: $light-border-size solid $border-color;
+
+.floating-card {
+  @include light-border();
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1rem;
+  padding: 1rem;
+  width: 500px;
+  margin: 5rem auto;
+
+  .card-header {
+  }
+
+  .card-content {
+  }
+
+  .card-footer {
+    display: flex;
+    justify-content: end;
+  }
+}

@@ -1,6 +1,6 @@
 {
   "tasks": {
-    "start": "deno run -A --watch=static/,routes/ dev.ts --allow-read=./users.json --allow-write=./users.json",
+    "start": "deno run -A --watch=styles/,routes/ dev.ts --allow-read=./users.json --allow-write=./users.json",
     "compile_not_working": "deno compile --output mentoring-circle main.ts --allow-read=./users.json --allow-write=./users.json"
   },
   "importMap": "./import_map.json",

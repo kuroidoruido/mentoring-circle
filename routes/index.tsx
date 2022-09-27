@@ -1,4 +1,11 @@
+import { Head } from "$fresh/runtime.ts";
 import { Handlers, PageProps } from "$fresh/server.ts";
+import {
+  CardContent,
+  CardFooter,
+  CardHeader,
+  FloatingCard,
+} from "../components/FloatingCard.tsx";
 
 interface User {
   name: string;
@@ -41,69 +48,87 @@ async function getBodyFormAsMap(req: Request): Promise<Map<string, string>> {
 }
 
 export default function Home(props: PageProps<User>) {
-  if (props.data) {
-    return <RegisterConfirm {...props} />;
-  } else {
-    return <RegisterForm {...props} />;
-  }
+  const content = (() => {
+    if (props.data) {
+      return <RegisterConfirm {...props} />;
+    } else {
+      return <RegisterForm />;
+    }
+  })();
+
+  return (
+    <>
+      <Head>
+        <title>Deno Fresh Template</title>
+        <link rel="stylesheet" href="./styles.min.css" />
+      </Head>
+      {content}
+    </>
+  );
 }
 
-export function RegisterForm({ data }: PageProps<User>) {
+export function RegisterForm() {
   return (
-    <div>
-      <h1>Register</h1>
-      <form method="POST">
-        <div className="field">
-          <label for="name">Name:</label>
-          <input type="text" id="name" name="name" />
-        </div>
-        <div className="field">
-          <span>Do you want to be mentored?</span>
-          <div className="option">
-            <input
-              type="radio"
-              id="be-mentored-yes"
-              name="beMentored"
-              value="yes"
-            />
-            <label for="be-mentored-yes">I want to be mentored</label>
+    <form method="POST">
+      <FloatingCard>
+        <CardHeader>
+          <h1>Register</h1>
+        </CardHeader>
+        <CardContent>
+          <div className="field">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" />
           </div>
-          <div className="option">
-            <input
-              type="radio"
-              id="be-mentored-no"
-              name="beMentored"
-              value="no"
-              checked
-            />
-            <label for="be-mentored-no">I do not want to be mentored</label>
+          <div className="field options">
+            <span className="options-label">Do you want to be mentored?</span>
+            <div className="option">
+              <input
+                type="radio"
+                id="be-mentored-yes"
+                name="beMentored"
+                value="yes"
+              />
+              <label for="be-mentored-yes">I want to be mentored</label>
+            </div>
+            <div className="option">
+              <input
+                type="radio"
+                id="be-mentored-no"
+                name="beMentored"
+                value="no"
+                checked
+              />
+              <label for="be-mentored-no">I do not want to be mentored</label>
+            </div>
           </div>
-        </div>
-        <div className="field">
-          <span>Do you want to be a mentor?</span>
-          <div className="option">
-            <input
-              type="radio"
-              id="be-mentor-yes"
-              name="beMentor"
-              value="yes"
-            />
-            <label for="be-mentor-yes">I want to be a mentor</label>
+          <div className="field options">
+            <span className="options-label">Do you want to be a mentor?</span>
+            <div className="option">
+              <input
+                type="radio"
+                id="be-mentor-yes"
+                name="beMentor"
+                value="yes"
+              />
+              <label for="be-mentor-yes">I want to be a mentor</label>
+            </div>
+            <div className="option">
+              <input
+                type="radio"
+                id="be-mentor-no"
+                name="beMentor"
+                value="no"
+                checked
+              />
+              <label for="be-mentor-no">I do not want to be a mentor</label>
+            </div>
           </div>
-          <div className="option">
-            <input
-              type="radio"
-              id="be-mentor-no"
-              name="beMentor"
-              value="no"
-              checked
-            />
-            <label for="be-mentor-no">I do not want to be a mentor</label>
-          </div>
-        </div>
-        <button>Register</button>
-      </form>
-    </div>
+        </CardContent>
+        <CardFooter>
+          <button>Register</button>
+        </CardFooter>
+      </FloatingCard>
+    </form>
   );
 }
 export function RegisterConfirm({ data }: PageProps<User>) {

@@ -1,0 +1,13 @@
+form {
+  .field {
+    padding: 0.5rem 0;
+
+    &:not(.options) {
+      display: flex;
+      gap: 1rem;
+      input {
+        flex: 1;
+      }
+    }
+  }
+}
