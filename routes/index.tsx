@@ -6,12 +6,7 @@ import {
   CardHeader,
   FloatingCard,
 } from "../components/FloatingCard.tsx";
-
-interface User {
-  name: string;
-  beMentored: boolean;
-  beMentor: boolean;
-}
+import { User } from "../models/index.ts";
 
 export const handler: Handlers<User | null> = {
   async POST(req, ctx) {
@@ -59,7 +54,7 @@ export default function Home(props: PageProps<User>) {
   return (
     <>
       <Head>
-        <title>Deno Fresh Template</title>
+        <title>Mentoring Circle</title>
         <link rel="stylesheet" href="./styles.min.css" />
       </Head>
       {content}

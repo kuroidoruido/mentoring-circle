@@ -1,0 +1,6 @@
+#cy {
+  border: 1px solid #bbb;
+  & > div {
+    min-height: 700px;
+  }
+}

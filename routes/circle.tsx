@@ -1,60 +1,85 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
+import { Head } from "$fresh/runtime.ts";
+import CircleViz from "../islands/CircleViz.tsx";
+import { MentoringPair, User } from "../models/index.ts";
+import {
+  CardContent,
+  CardHeader,
+  FloatingCard,
+} from "../components/FloatingCard.tsx";
+import { computeMentoringPairs } from "../utils/mentoring.utils.ts";
 
-interface User {
-  name: string;
-  beMentored: boolean;
-  beMentor: boolean;
+interface HandlersData {
+  users: User[];
+  pairs: MentoringPair[];
 }
 
-interface MentoringPair {
-  mentor: string;
-  mentored: string;
-}
-
-export const handler: Handlers<MentoringPair[]> = {
+export const handler: Handlers<HandlersData> = {
   async GET(_, ctx) {
     const users: User[] = JSON.parse(
       await Deno.readTextFile("./data/users.json").catch(() => "[]")
     );
-    const mentoringPairs: MentoringPair[] = [];
-    const mentors = users.filter((u) => u.beMentor);
-    const mentoreds = users.filter((u) => u.beMentored);
-    mentors.sort(() => Math.random() * 100 - 50);
-    mentoreds.sort(() => Math.random() * 100 - 50);
-    for (const mentored of mentoreds) {
-      if (mentors.length === 0) {
-        mentors.push(...users.filter((u) => u.beMentor));
-        mentors.sort(() => Math.random() * 100 - 50);
-      }
-      const mentorIndex = mentors.findIndex((u) => u.name !== mentored.name);
-      const [mentor] = mentors.splice(mentorIndex, 1);
-      mentoringPairs.push({ mentor: mentor.name, mentored: mentored.name });
-    }
-    return ctx.render(mentoringPairs);
+    const pairs = computeMentoringPairs(users);
+    return ctx.render({ pairs, users });
   },
 };
 
-export default function Home({ data }: PageProps<MentoringPair[]>) {
+export default function Circle({ data }: PageProps<HandlersData>) {
   return (
-    <div>
-      <table>
-        <thead>
-          <tr>
-            <th>Mentor</th>
-            <th>Mentored</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.map(({ mentor, mentored }) => {
-            return (
+    <>
+      <Head>
+        <title>Mentoring Circle</title>
+        <link rel="stylesheet" href="./styles.min.css" />
+      </Head>
+      <FloatingCard>
+        <CardContent>
+          <h1>Summary</h1>
+          <table>
+            <thead>
               <tr>
-                <td>{mentor}</td>
-                <td>{mentored}</td>
+                <th></th>
+                <th>Wants to be mentor</th>
+                <th>Wants to be mentored</th>
               </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
+            </thead>
+            <tbody>
+              {data.users.map((user) => {
+                return (
+                  <tr>
+                    <td>{user.name}</td>
+                    <td className="col-aligh-center">
+                      {user.beMentor ? "Yes" : "No"}
+                    </td>
+                    <td className="col-aligh-center">
+                      {user.beMentored ? "Yes" : "No"}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+          <h1>Pairs</h1>
+          <table>
+            <thead>
+              <tr>
+                <th>Mentor</th>
+                <th>Mentored</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.pairs.map(({ mentor, mentored }) => {
+                return (
+                  <tr>
+                    <td>{mentor}</td>
+                    <td>{mentored}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </CardContent>
+      </FloatingCard>
+      <CircleViz pairs={data.pairs} users={data.users} />
+    </>
   );
 }
