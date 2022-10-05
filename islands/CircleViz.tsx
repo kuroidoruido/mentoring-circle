@@ -8,14 +8,14 @@ interface CircleVizProps {
 }
 
 export default function CircleViz({ users, pairs }: CircleVizProps) {
-  //   const [count, setCount] = useState(0);
-
   useEffect(() => {
     const cy = cytoscape.default({
       container: document.getElementById("cy"),
 
       boxSelectionEnabled: false,
       autounselectify: true,
+      zoomingEnabled: false,
+      userZoomingEnabled: false,
 
       elements: {
         nodes: users.map((user) => ({
@@ -36,8 +36,10 @@ export default function CircleViz({ users, pairs }: CircleVizProps) {
         name: "breadthfirst",
         directed: true,
         fit: true,
-        condense: false,
+        condense: true,
         padding: 30,
+        avoidOverlap: true,
+        spacingFactor: 1.1,
       },
 
       style: [
